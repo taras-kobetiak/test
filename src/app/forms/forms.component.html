@@ -1,0 +1,36 @@
+<div class="wrapper">
+    <form action="" class="form" [formGroup]="userForm">
+        <div class="form__name">
+            <label for="name">Name:</label>
+            <input id="name" type="text" formControlName="name">
+            <div class="errors">
+                <p *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid">Wrong data</p>
+            </div>
+        </div>
+        <div class="form__email">
+            <label for="email">Email:</label>
+            <input type="email" formControlName="email">
+            <div class="errors">
+                <p *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid">Wrong data</p>
+            </div>
+        </div>
+    </form>
+
+
+    <form [formGroup]="ArrayFormControl">
+        <table class="table">
+            <div formArrayName="dataArrayForm">
+                <tr>
+                    <th>First column</th>
+                    <th>URL</th>
+                </tr>
+                <tr *ngFor="let elem of ArrayFormControl.get('dataArrayForm')?.value,let i = index">
+
+
+                    <td><input formControlName="{{i}}" type="text">{{elem.firstColumn}}</td>
+                    <td>{{elem.url}}</td>
+                </tr>
+            </div>
+        </table>
+    </form>
+</div>

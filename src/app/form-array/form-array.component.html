@@ -1,0 +1,12 @@
+<div class="wrapper">
+    <form [formGroup]="formGroupControl" (ngSubmit)="onSubmit(formGroupControl)">
+        <div formArrayName="dataListArray">
+            <li *ngFor="let elem of formGroupControl.get('dataListArray')?.value, let i = index">
+                <input formControlName="{{i}}">
+                <button (click)="removeUserControl(i)">Delete</button>
+            </li>
+        </div>
+        <button (click)="addUser()">Add item</button>
+        <button type="submit">Submit</button>
+    </form>
+</div>
