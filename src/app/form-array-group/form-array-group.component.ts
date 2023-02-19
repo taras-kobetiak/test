@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import {FormGroup, FormArray, FormControl, Validators, FormBuilder} from '@angular/forms';
 import { debounceTime } from 'rxjs';
 
 @Component({
@@ -9,52 +9,48 @@ import { debounceTime } from 'rxjs';
 })
 export class FormArrayGroupComponent implements OnInit {
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
   formGroupControl: FormGroup;
 
+  get items(): FormArray {
+    return this.formGroupControl.get('dataListArray') as FormArray;
+  }
+
+  get itemsControls(): FormGroup[] {
+    return this.items.controls as FormGroup[];
+  }
+
   ngOnInit(): void {
 
-    this.formGroupControl = new FormGroup({
-      dataListArray: new FormArray([
-        new FormGroup({
-          name: new FormControl('Taras'),
-          age: new FormControl('30', Validators.minLength(4)),
+    this.formGroupControl = this.fb.group({
+      dataListArray: this.fb.array([
+        this.fb.group({
+          name: ['Taras'],
+          age: [30]
         }),
-        new FormGroup({
-          name: new FormControl('Vika'),
-          age: new FormControl('27'),
-        })
-      ])
-    })
+        this.fb.group({
+          name: ['Vika'],
+          age: [30]
+        }),
+      ]),
+    });
   }
 
-  onSubmit(formGroupControl: FormGroup): void {
-    console.log(formGroupControl.value);
+  onSubmit(): void {
+    console.log(this.formGroupControl.value);
   }
-
-
-  trackByFn(index: any, item: any) {
-    return index;
-  }
-
-
-  // dataListArrayHandling(): void {
-  //   this.formGroupControl.valueChanges.pipe(
-  //     debounceTime(500)
-  //   ).subscribe(a => console.log(a))
-  // }
 
   removeUserControl(i: number): void {
-    (this.formGroupControl.get('dataListArray') as FormArray).removeAt(i);
+    this.items.removeAt(i);
   }
 
   addUser(): void {
-    (this.formGroupControl.get('dataListArray') as FormArray).push(new FormGroup({
-      name: new FormControl(''),
-      age: new FormControl(''),
-    }),);
-
+    const item = this.fb.group({
+      name: ['', Validators.required],
+      age: [null, Validators.required]
+    });
+    this.items.push(item);
   }
 }
 

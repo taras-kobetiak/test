@@ -1,23 +1,18 @@
 <div class="wrapper">
-
-
-    <form [formGroup]="formGroupControl" (ngSubmit)="onSubmit(formGroupControl)">
-        <div formArrayName="dataListArray">
-            <li *ngFor="let elem of formGroupControl.get('dataListArray')?.value; let i = index; trackBy: trackByFn">
-                <div [formGroupName]="i">
-                    <input formControlName="name">
-                    <input formControlName="age">
-                    <p style="color:red"
-                        *ngIf="formGroupControl.get('dataListArray')?.get('{{i}}')?.get('age')?.invalid">Wrong data</p>
-                    <button (click)="removeUserControl(i)">Delete</button>
-                </div>
-            </li>
-
-
-
-
+  <form [formGroup]="formGroupControl" (ngSubmit)="onSubmit()">
+    <ng-container formArrayName="dataListArray">
+      <ng-container *ngFor="let item of itemsControls; let i = index">
+        <div [formGroup]="item">
+          <input type="text" formControlName="name">
+          <input type="number" formControlName="age">
+          <button (click)="removeUserControl(i)">Delete</button>
+          <p *ngIf="item.get('name')?.touched && item.hasError('required', ['name'])">Name is required</p>
+          <p *ngIf="item.get('age')?.touched && item.hasError('required', ['age'])">Age is required</p>
         </div>
-        <button (click)="addUser()">Add item</button>
-        <button type="submit">Submit</button>
-    </form>
+      </ng-container>
+    </ng-container>
+
+    <button (click)="addUser()">Add item</button>
+    <button type="submit">Submit</button>
+  </form>
 </div>
